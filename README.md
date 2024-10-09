@@ -40,8 +40,8 @@ The android app lets you:
 - Selecting the desired folder.
 - Set password and readonly mode for more security.
 ## Screenshots
-[<img src="/screenshots/screen_1.jpeg" align="left" width="20%" hspace="10" vspace="10">]()
-[<img src="/screenshots/screen_2.jpeg" align="center" width="20%" hspace="10" vspace="10">]()
+[<img src="/screenshots/screen_1.png" align="left" width="20%" hspace="10" vspace="10">]()
+[<img src="/screenshots/screen_2.png" align="center" width="20%" hspace="10" vspace="10">]()
     
 [<img src="/screenshots/screen_tv_1.png" align="center" width="40%" hspace="10" vspace="10">]()
 [<img src="/screenshots/screen_tv_2.png" align="center" width="40%" hspace="10" vspace="10">]()
