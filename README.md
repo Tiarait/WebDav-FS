@@ -3,7 +3,7 @@
 [![Issues][issues-shield]][issues-url] [![Android][android-shield]][gp-url] [![LinkedIn][linkedin-shield]][linkedin-url] [![Coffee][coffee-shield]][coffee-url]
 
 
-# WebDAV FS - Android App
+# [WebDAV FS - Android App](https://tiarait.github.io/WebDav-FS-Intro/)
 
 <img src="/screenshots/play_store_512.png" align="left"
 width="25%" hspace="10" vspace="10">
@@ -39,6 +39,10 @@ The android app lets you:
 - Switch between language.
 - Selecting the desired folder.
 - Set password and readonly mode for more security.
+
+## User Help
+[Information about available settings in the application](https://tiarait.github.io/WebDav-FS-Intro/help.html)
+
 ## Screenshots
 [<img src="/screenshots/screen_1.png" align="left" width="20%" hspace="10" vspace="10">]()
 [<img src="/screenshots/screen_2.png" align="center" width="20%" hspace="10" vspace="10">]()
