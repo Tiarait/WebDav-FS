@@ -24,6 +24,8 @@ There is support for https.
 
 <br></br>
 
+### User help [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Tiarait/WebDav-FS)
+
 ## About
 WebDAV FS is a versatile Android app designed to simplify the process of creating a WebDAV server on your device. With a user-friendly interface, it offers a range of customizable settings to enhance your server experience. Users can easily configure the server by selecting the desired port, choosing a specific folder, and setting a password for added security. The option to enable "read-only" mode ensures controlled access.
 
