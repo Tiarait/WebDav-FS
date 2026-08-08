@@ -1,0 +1,9 @@
+{
+  "id": "rate-v1.2.12-test",
+  "title": "Enjoying WebDav FS?",
+  "body": "A short review helps a lot.",
+  "actions": [
+    { "type": "review", "label": "Rate" },
+    { "type": "rate", "label": "Open Play Store" }
+  ]
+}
