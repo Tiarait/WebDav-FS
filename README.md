@@ -60,8 +60,8 @@ The Android app lets you:
 | | |
 | --- | --- |
 | ![0 · Mobile server list](./screenshots/0.png) | ![1 · Mobile serser](./screenshots/1.png) |
-| ![2 · Mobile server status](./screenshots/2.png) | ![3 · TV main](./screenshots/3.png) |
-| ![4 · TV server](./screenshots/4.png) | |
+| ![2 · Mobile server status](./screenshots/2.png) | |
+| ![3 · TV main](./screenshots/3.png) | ![4 · TV server](./screenshots/4.png) |
 
 
 ## License
