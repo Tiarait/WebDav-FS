@@ -1,80 +1,43 @@
-# Networking & discovery
+# Networking (users)
 
-## Address shown in the UI
+How addresses and bind options work. Setup walkthrough: [../user/guide.md](../user/guide.md).
 
-Built from **`ServerConfig.address`** / **`displayHost`**:
+## Address on Home
 
-```text
-{userProt}://{host}:{userPort}
-```
+When the server is **Started**, Home shows something like `http://192.168.x.x:8080` (or `https://…`). Use **Connect** for QR, copy, and share.
 
-| Piece | Source |
-|-------|--------|
-| `userProt` | `ftp` / `http` / `https` from profile (`serverType` + `useSsl`) |
-| `host` | From `ipType` via `UtilsNetwork.hostForProfile` (LAN IP when `ipType == "all"`) |
-| `userPort` | `ServerProfile.port` |
+- **IPv6** addresses appear in brackets in the URL when used.  
+- If you only see `127.0.0.1`, the device has no usable LAN IPv4 (Wi‑Fi off, odd AP mode, etc.).
 
-IPv6 hosts are bracketed in the URL. ViewModels expose this as `serverAddress` for share / QR / notification.
+## IP setting (Connection)
 
-Sharing the address uses the system share sheet (`shareText`) on phone UI — not a forced browser open.
+| Choice | Meaning |
+|--------|---------|
+| **All** (recommended) | Listen on all interfaces; the link shows your current Wi‑Fi IPv4 |
+| A listed address | Bind **only** that interface |
+| `127.0.0.1` | Only apps on **this device** can connect |
 
----
+Wrong bind = PC cannot connect even though the server is Started. Prefer **All** on home Wi‑Fi.
 
-## `UtilsNetwork`
+Changing IP / port / SSL while running may show a **Restart** banner — restart so the listener matches the new settings.
 
-Path: `utils/UtilsNetwork.kt`
+## Buffer size (WebDAV Advanced)
 
-| API | Role |
-|-----|------|
-| `getAllNetworkAddresses()` | Choices for IP picker: `"all"`, `127.0.0.1`, then up interfaces (IPv4 preferred). Cached ~30s |
-| `invalidateCache()` | Called on Wi‑Fi / AP state changes |
-| `ipAddressInLocalNetwork` | Best-effort site-local IPv4, else `127.0.0.1` |
-| `hostForProfile(ipType, detectedLocalHost)` | Resolve bind/display host for a profile |
-| `displayIpType(ipType)` | Human label in settings |
-| `isAvailablePort(port)` | Probe with `ServerSocket`; `BindException` → unavailable |
+Transfer buffer for WebDAV. Leave **Recommended** unless large transfers on a fast LAN feel slow. Very high values can use more memory and may be less stable on low-RAM phones (the app warns).
 
-Legacy helper `ipAddressInLocalSettings` still reads app-level IP prefs; **fleet profiles use `ServerProfile.ipType`**.
+## Wi‑Fi change
 
----
+If Wi‑Fi or IP changes while servers are running:
 
-## Bind host (`ipType`)
+1. The shown address updates.  
+2. Running servers may **auto-restart** briefly so they bind the new network — in-flight transfers can fail; reconnect clients.  
+3. If the address still looks wrong, stop/start once from Home.
 
-| `ipType` | Ktor | FTP |
-|----------|------|-----|
-| `"all"` (default) | Connector host omitted → all interfaces | Bind `0.0.0.0` |
-| Specific IP / hostname | Connector `host = userHost` | Bind that host |
+## Same LAN checklist
 
-UI picker is filled from `getAllNetworkAddresses()`.
+- Phone and PC on the same Wi‑Fi (or VPN).  
+- Correct **port** and `http` vs `https`.  
+- OEM “firewall” / data saver not blocking the app.  
+- Battery optimization exempt if the server dies when the screen is off — App settings → Battery.
 
----
-
-## Wi‑Fi change / restart
-
-`WifiReceiver` (`utils/WifiReceiver.kt`), registered from `App.registerReceivers()`:
-
-1. Listens to connectivity / Wi‑Fi AP broadcasts.
-2. Invalidates address cache.
-3. Debounces (~1s) then `ServerFleet.refreshAllHosts(newIp)`.
-4. If any server is running → `ServerManager.restartRunningServers(fleet)` and refresh notification.
-5. WakeLock is kept across stop→start so the process is not slept mid-restart.
-
-TV may skip some notification refresh paths; host refresh still applies.
-
----
-
-## Port conflicts
-
-- Two profiles must not share the same port; start fails with availability / in-use errors.
-- `Server.tryStart()` retries and surfaces messages such as:
-  - `Port {n} is already in use`
-  - `Port {n} is not available`
-  - `Access denied for port {n}`
-- Special case: if the port is busy but probes show **this app** already serving (`/config-js` or realm `WebDAV FS`), start may treat it as already `Started` (toast about already running).
-
-See [../troubleshooting.md](../troubleshooting.md).
-
----
-
-## LAN vs internet
-
-The app is designed for **local network** access. Exposing a phone to the public internet (port forward, DynDNS, CGNAT) is a user networking concern — see [user/guide.md](../user/guide.md) — not enforced in code beyond optional HTTPS/auth.
+Related: [../troubleshooting.md](../troubleshooting.md), [../development/oem-battery.md](../development/oem-battery.md) (OEM battery screens).

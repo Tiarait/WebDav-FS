@@ -8,11 +8,11 @@
 <img src="/screenshots/play_store_512.png" align="left"
 width="25%" hspace="10" vspace="10">
 
-WebDAV FS is a fast, simple and secure application that provides a WebDav server on your device. 
+WebDAV FS is a fast, simple and secure application that provides a WebDAV (and optional FTP) server on your device.
 
-With this application you can set any directory on your phone, including memory cards, as a drive for Windows or Linux. 
+With this application you can set any directory on your phone — including memory cards — as a drive for Windows or Linux. Run one server or several at once (for example, internal storage and an SD card on different ports).
 
-There is support for https.
+There is support for HTTPS, a built-in browser file manager, Android TV, and Free / Pro editions.
 
 <p align="left">
 <a href="https://play.google.com/store/apps/details?id=ua.tiar.webdavfs">
@@ -27,23 +27,33 @@ There is support for https.
 ### User help [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Tiarait/WebDav-FS)
 
 ## About
-WebDAV FS is a versatile Android app designed to simplify the process of creating a WebDAV server on your device. With a user-friendly interface, it offers a range of customizable settings to enhance your server experience. Users can easily configure the server by selecting the desired port, choosing a specific folder, and setting a password for added security. The option to enable "read-only" mode ensures controlled access.
 
-Additionally, the app provides flexibility in how the server runs, offering choices to start it with the app or with the device itself. Users can also enhance security by enabling SSL (HTTPS) for encrypted communication. The app caters to personalization preferences, allowing users to select themes and language settings according to their preferences.
+WebDAV FS turns an Android phone, tablet, or TV into a **local file server**. Other devices on the same network can browse, copy, and manage files on your device.
 
-Whether you're looking to share files or create a secure server for personal use, 'WebDAV FS' streamlines the process, providing a seamless and customizable experience for Android users.
+Configure each server with its own port, shared folder (or users), password / read-only access, and optional SSL. Start servers manually, with the app, or after boot. Theme and language follow your preferences.
+
+Whether you need a quick share on home Wi‑Fi or a more locked-down setup with HTTPS and accounts, WebDAV FS keeps the flow simple and customizable.
+
 ## Features
 
-The android app lets you:
-- Create local server with webDAV API.
-- Supports SSL(https) connection.
-- Server can start on boot device.
-- Switch between language.
-- Selecting the desired folder.
-- Set password and readonly mode for more security.
+The Android app lets you:
+
+- Run one or more **WebDAV** servers on the local network (Free: up to **2**; Pro: no fixed app limit)
+- Optional **FTP** mode per server
+- **HTTPS** with Auto / Import / Let's Encrypt (ACME) certificates
+- Built-in **web file manager** (thumbnails, ZIP helpers, and more)
+- Strong WebDAV support for capable clients — core **RFC 4918**, quota (**RFC 4331**), sync-collection (**RFC 6578**), conditional requests (**RFC 7232**), locks, ranges / partial uploads
+- Password / **Users** (roles, folders, optional quotas) and read-only mode
+- **Status** metrics and **Logs** in the app; start with app or device
+- Folder picker with Quick Access shortcuts; SD card / SAF access
+- Themes, languages, and **Android TV** UI
+- Free edition includes ads (session disable via rewarded video); Pro unlocks extras such as custom headers and hidden-file tools
 
 ## User Help
-[Information about available settings in the application](https://tiarait.github.io/WebDav-FS-Intro/help.html)
+
+- [Information about available settings in the application](https://tiarait.github.io/WebDav-FS-Intro/help.html)
+- In-repo guide for DeepWiki and end users: [`docs_ai/`](docs_ai/README.md) — start with the [user guide](docs_ai/user/guide.md) or [WebDAV capabilities](docs_ai/features/webdav-capabilities.md)
+- Ask questions on [DeepWiki](https://deepwiki.com/Tiarait/WebDav-FS)
 
 ## Screenshots
 [<img src="/screenshots/screen_1.png" align="left" width="20%" hspace="10" vspace="10">]()
@@ -67,5 +77,3 @@ WebDAV FS is released under the [Apache-2.0](LICENSE).
 [coffee-url]: https://www.buymeacoffee.com/tiarapps
 
 [android-shield]: https://img.shields.io/badge/Android-5.0+-green?style=for-the-badge
-
-    

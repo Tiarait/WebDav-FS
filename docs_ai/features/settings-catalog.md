@@ -1,11 +1,9 @@
 # Settings field catalog
 
-Maps UI rows to `ServerProfile` / `AppSettings` property names.  
-Source types: `server/fleet/ServerProfile.kt`, Compose settings lists under `ui/compose/components/`.
+Maps **what you see in the app** to internal field names (for assistants / maintainers).  
+End-user explanations: [../user/guide.md](../user/guide.md).
 
-Phone server sheet order: **`settingsListServerOrdered`** = Less → SSL → More → Extras → Actions.
-
-When code and this table disagree, **code wins**.
+When the app UI and this table disagree, **trust the app**.
 
 ---
 
@@ -39,10 +37,11 @@ Legacy SSL fields still exist on `ServerProfile` for migration (`sslCertMode`, p
 | Server type | `serverType` | `"webdav"` / `"ftp"` |
 | Buffer size | `bufferSize` | WebDAV; `0` = device default (`effectiveBufferSize`) |
 | Web interface | `useWebInterface` | WebDAV |
-| Client UI | `clientUi` | `"modern"` / `"old"` / `"nojs"` when web UI on |
-| Custom headers | `customHeadersRaw` | **Pro** (dialog + `applyProfile` gate) |
+| Client UI | `clientUi` | `"vue"` / `"modern"` / `"old"` / `"nojs"` when web UI on |
+| Custom headers | `customHeadersRaw` | **Pro** |
 | CORS | `corsMode` | `"allow_all"` / `"off"` |
-| Read only | `permissionWrite` (inverted in UI) | Only when `!useUsers` |
+| File metadata cache | `fileCacheEnabled` | WebDAV; default **true**; live; Status Mode chip |
+| Read only | `permissionWrite` (inverted in UI) | Only when password is off |
 | Select hidden files | `UtilsPro.writeHidden` (sidecar file) | **Pro** |
 | Hide hidden | `hideHidden` | **Pro** UI gate |
 | Show folder size | `showFolderSize` | |
@@ -72,18 +71,24 @@ Deprecated profile flag: `enabled` (prefer `startWithDevice`).
 
 ---
 
-## App-wide (`settingsListApp` → `AppSettings`)
+## App-wide (`settingsListApp` → `AppSettings` + actions)
 
-| UI | Pref / action | Default / notes |
-|----|---------------|-----------------|
+Grouped in UI: **Application** → **Permissions** → **System**.
+
+| UI | Pref / action | Notes |
+|----|---------------|--------|
+| Theme | `theme_key` | `""` = system; `"light"` / `"dark"` |
+| Language | `app_lang` | `""` = system |
 | Disable ads (session) | Session flag via `ExtendUtils` | Free only |
 | Ad consent | UMP / consent form | Free only |
 | Battery optimization | System / OEM screens | Not a pref key |
-| Folder / storage permissions | Runtime / all-files access | See [../development/permissions-saf.md](../development/permissions-saf.md) |
-| Theme | `theme_key` (`setThemeVal`) | `""` = system; `"light"` / `"dark"` |
-| Language | `app_lang` | `""` = system |
-| Help | Opens help / link dialog | |
-| Reset all data | `ServerFleet.resetAllData()` (+ stop servers, clear certs as implemented) | Destructive |
+| Folder / storage permissions | Runtime / all-files access | [../development/permissions-saf.md](../development/permissions-saf.md) |
+| Notification permissions | Runtime (API 33+) | Soft reminder on start also exists |
+| About | `AboutAppSheet` | Site, email, Play, GitHub (assets icons by flavor) |
+| Feedback | mailto dialog | Subject string `feedback_email_subject` |
+| Help | Link dialog | |
+| Ask AI | DeepWiki link | |
+| Reset all data | `ServerFleet.resetAllData()` (+ stop, clear certs/prefs as implemented) | Destructive |
 
 Other `AppSettings` keys commonly used in code:
 
@@ -91,11 +96,16 @@ Other `AppSettings` keys commonly used in code:
 |-----|-----|------|
 | `c_server_starts` | `countServerStart` | Free ad thresholds |
 | `show_exit_b` | `showExitBtn` | Exit button visibility |
-| `f_d_type_server` | first server-type dialog | Classic UI first-start WebDAV/FTP picker |
 | `legacy_server_prefs_migrated` | migration flag | One-shot move into fleet profiles |
 | `version` | `prevVersion` | Last-seen app version |
 
 Legacy single-server prefs (`port_key`, `path_key`, `use_ssl_key`, …) are migrated into `ServerProfile` then cleared — do not write new features there.
+
+---
+
+## Status tab (read-only)
+
+Not settings rows — live metrics and Mode chips (Auth, RO, Web, CORS, Cache). See [app-ux.md](app-ux.md) and the [user guide](../user/guide.md#6-status-tab-metrics).
 
 ---
 
@@ -123,8 +133,9 @@ Legacy single-server prefs (`port_key`, `path_key`, `use_ssl_key`, …) are migr
 | `sslCertificateId` | String | `""` |
 | `sslCertMode` … ACME / keystore legacy fields | various | see source |
 | `useWebInterface` | Boolean | `true` |
-| `clientUi` | String | `"modern"` |
+| `clientUi` | String | `"vue"` |
 | `corsMode` | String | `"allow_all"` |
+| `fileCacheEnabled` | Boolean | `true` |
 | `customHeadersRaw` | String | `""` |
 | `hideHidden` | Boolean | `false` |
 | `showFolderSize` | Boolean | `false` |
@@ -141,8 +152,8 @@ Constants: `DEFAULT_ID = "default"`, `DEBUG_SECOND_ID = "debug2"`.
 
 | Feature | Gate |
 |---------|------|
-| Custom headers | Pro UI + `DialogCustomHeaders` + `Server.applyProfile` |
-| Hidden file list / hide hidden | Pro UI + `UtilsPro.readHidden`/`writeHidden` no-op on free |
-| Add server beyond cap | `ServerFleet.canAddServer()` / `FREE_MAX_SERVERS = 2` |
-| Add user beyond cap | Users UI / `UtilsPro.FREE_MAX_USERS = 2` |
-| Ads rows in app settings | Free only (`!UtilsPro.isPro`) |
+| Custom headers | Pro |
+| Hidden file list / hide hidden | Pro |
+| Add server beyond cap | Free max **2** |
+| Add user beyond cap | Free max **2** |
+| Ads rows in app settings | Free only |

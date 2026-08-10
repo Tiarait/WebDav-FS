@@ -1,25 +1,20 @@
-# TV UI and ads
+# TV and ads (notes)
 
-## Android TV / Leanback
+End-user TV map: [tv-ui-map.md](tv-ui-map.md). Free ads UX: [free-vs-pro.md](free-vs-pro.md).
 
-- Manifest declares leanback launcher / touchscreen optional.
-- `MainActivity` branches on `UiUtils.isRunningOnTv` → `TVMainScreen` instead of phone Compose home.
-- TV packages under `ui/tv/`: navigation panels, server list, settings, users, logs, certificates, QR.
+## Android TV
 
-Permissions and start/stop still go through `UtilsPermission` and `ServerListViewModel` / detail VMs.
+Same multi-server / SSL / users / logs ideas as phone, but navigation is leanback (Servers / Settings / About / Exit). There is **no** phone-style Status metrics tab or bell inbox — announcements may appear as blocking dialogs.
 
-Soft notification reminders also apply on TV when posting notifications is denied (Android 13+).
+Permissions (storage, notifications, battery) still matter so the server can start and stay alive.
 
-## Ads (free flavor)
+## Ads (Free flavor)
 
-| Piece | Notes |
-|-------|--------|
-| Module | `:free` |
-| Init | Free `MainActivity` path / AdMob initialize helpers |
-| Surfaces | Banners in Compose; interstitial rules tied to server start/stop counts and cooldowns |
-| Consent | UMP / consent flows where wired in free module |
-| Session | User may disable ads for the current session (settings) |
+| Piece | What users see |
+|-------|----------------|
+| Banners | On phone Free UI while ads are enabled |
+| Interstitials | Occasional fullscreen ads after several server starts (with cooldowns) |
+| Consent | App settings → Application → consent form when offered |
+| Disable for session | App settings → watch rewarded video → ads off until the app is closed |
 
-Pro builds depend on `:pro` and must not pull AdMob.
-
-When changing ad triggers, observe **all** fleet servers’ status flows (not only the default server) so multi-server start/stop is counted correctly.
+Pro builds have no ads. TV Free builds may include the same flavor code; ad surfaces are mostly phone-oriented.

@@ -1,86 +1,55 @@
-# SSL certificates — UI & apply flow
+# SSL certificates — where to tap
 
-Product overview: [ssl.md](ssl.md). UI and apply chain: this page. Optional longer design notes may exist as `docs/SSL_CERTIFICATES.md` in the full source repository.
+Modes overview: [ssl.md](ssl.md).
 
-## Concepts
+## Idea
 
-| Type | Role |
-|------|------|
-| `SslCertificateProfile` | One cert entry; `mode` = `auto` \| `custom` \| `acme` |
-| `SslCertificateStore` | Persist JSON at `filesDir/certificates/profiles.json` |
-| `SslCertificateRepository` | In-memory `StateFlow` + CRUD + `serversUsing` / `canDelete` |
-| `SslCertificateResolver` | Copy cert fields onto runtime `ServerConfig` |
-| `ServerProfile.sslCertificateId` | Reference only (plus `useSsl`) |
+Certificates live in a **shared library**. Each WebDAV server with HTTPS **selects** one profile. Several servers can reuse the same one.
 
----
+## Open the library
 
-## UI screens
+Server → **Settings** → turn on **SSL (https)** → **Certificate**.
 
-| Screen | Path | Role |
-|--------|------|------|
-| List | `ui/compose/CertificateListScreen.kt` | Pick / edit / delete / add for a server |
-| Editor | `ui/compose/SslCertificateScreen.kt` | Mode tabs; save; regenerate; ACME DNS; delete |
+## Modes when adding / editing
 
-TV has parallel certificate screens under `ui/tv/`.
+| Mode | When to use |
+|------|-------------|
+| **Auto** | Quick local HTTPS (self-signed) |
+| **Import** | Your own PKCS12/JKS, or **PEM/CRT + private key** |
+| **ACME** | Let’s Encrypt for a real domain (DNS-01) |
 
-### Create
+## Status (any mode)
 
-`SslCertificateRepository.create("")` → `fleet.patchProfile { sslCertificateId = created.id }` → open editor.
+On the certificate screen, **Status** shows things like subject, issuer, expiry, fingerprint (SHA-256), and whether this profile is the one the server is using. Use it to confirm the cert clients will see after a restart.
 
-### Select
+## Auto (self-signed)
 
-Row click → `patchProfile { copy(sslCertificateId = cert.id) }`.
+| Action | What it does |
+|--------|----------------|
+| **Regenerate** | Creates a new self-signed cert (confirm first). Old trust on PCs becomes invalid — re-export/trust if needed. |
+| **Export public certificate (PEM)** | Saves the public cert so you can import/trust it on a computer or other device. |
 
-### Delete
+Browsers will warn “Not private” until they trust this cert — that is expected.
 
-- List: `canDelete` if no server references; else “in use” dialog.
-- Editor: delete + clear `sslCertificateId` on all servers that pointed at it.
+## Import
 
-### Apply after save
+1. Choose keystore (**PKCS12/JKS**) **or** separate **PEM/CRT + KEY** files.  
+2. Enter passwords if the keystore/key requires them.  
+3. Save, select the profile on the server, **restart** HTTPS.
 
-`certRepository.save` → `refreshServersUsingCert()` → for each running/attached server with that id: `runtime.applyProfile(profile, cert)` → `SslCertificateResolver.applyToServerConfig`.
+## ACME (Let’s Encrypt)
 
----
+1. Enter **domain** + **email** (and staging only if you are testing).  
+2. **Prepare DNS challenge** → create the **TXT** record at your DNS provider (copy/share from the app).  
+3. Wait for DNS (often a few minutes) → **Verify and issue**.  
+4. Optional: **Share/save DNS record** for renewals; **Export certificate and private key** for backups.  
+5. Select the profile on the server and restart if needed.  
+6. Connect with `https://your-domain:port`.
 
-## Modes (UI → disk → Ktor)
+Renewal is **manual**. The app warns before expiry — prepare DNS again and re-issue.
 
-```
-SslCertificateScreen tabs
-  Auto   → mode "auto"
-  Import → mode "custom" (+ importFormat keystore|pem)
-  ACME   → mode "acme"
-        ↓ save / ACME actions
-SslCertificateRepository → SslCertificateStore
-        ↓ Server.applyProfile
-SslCertificateResolver.applyToServerConfig
-        ↓ Ktor ServerConfig.resolveKeyStore()
-  auto   → AutoCertificateGenerator.ensureAutoCertificate
-  custom → CertificateLoader.loadPem | loadKeystore
-  acme   → AcmeCertificateStorage.loadKeyStore
-            ↑ prepareDns01Challenge / completeDns01AndStore
-              → AcmeCertificateIssuer (:acme)
-```
+## After any change
 
-### Auto
+Start or **Restart** the server so clients pick up the new certificate. If delete is blocked, another server may still be using that profile.
 
-Regenerate with `forceRegenerate=true` → update stored password / refresh servers.
-
-### Import
-
-Validate via `CertificateLoader` before save; may clear auto cache when leaving Auto.
-
-### ACME (DNS-01 product path)
-
-1. `prepareAcmeDnsChallenge` → TXT record instructions.
-2. User publishes DNS.
-3. `completeAcmeDnsCertificate` → store under `certificates_data/{id}/ssl/acme/` → `mode=acme`.
-
-HTTP-01 challenge route also exists for Ktor (`RouteAcmeChallenge`) when needed by the issuer.
-
----
-
-## Migration
-
-`SslCertificateRepository.migrateEmbeddedFromServers` lifts legacy per-profile SSL fields into the global library once.
-
-Helpers under `server/ssl/`: `AutoCertificateGenerator`, `AcmeCertificateStorage`, `CertificateLoader`, …
+More steps: [../user/guide.md](../user/guide.md#10-how-to-connect).

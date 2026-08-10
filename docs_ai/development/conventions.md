@@ -1,24 +1,16 @@
 # Conventions
 
-## Documentation
+## Documentation (`docs_ai/`)
 
-- **`docs_ai/`** — publishable documentation (user guide + technical). English.  
-- **`docs/`** — additional long-form material in the same repo (SSL design, Play FGS copy, JS APIs). Prefer linking rather than duplicating huge essays.  
-- When code and docs disagree, **fix code**, then update docs.
+- Written for **DeepWiki and end users**: how to use and configure the app, what clients can do.
+- **Self-contained** - no required links outside this tree.
+- Avoid leaking implementation secrets (internal paths, handler class names, unpublished APIs). Capability docs are fine (RFCs, thumbs query shape, HTTP statuses).
+- When the app and docs disagree, **trust the app**, then update docs.
 
-## Code changes
+## Product changes (maintainers)
 
-- Match existing style; minimal diffs; no drive-by refactors.  
-- Free vs Pro: keep flavor boundaries (`:free` / `:pro`, `UtilsPro`, `BuildConfig.IS_PRO`).  
-- Do not commit secrets (`gradle.properties.local`, keystores, API keys).
-
-## Server / FGS safety
-
-- Do not switch FGS back to `dataSync` without a new platform strategy.  
-- Do not release WakeLock while `anyActive()` is true.  
-- Do not call `stopAll()` from `NotificationService.onDestroy` unless deliberately redesigned.
-
-## UI
-
-- Phone Compose and TV are separate; fix both when changing start/share/permission UX.  
-- Notification permission: soft reminder OK; do not spam the system dialog every start.
+- Match existing style; minimal diffs.
+- Keep Free / Pro boundaries.
+- Do not commit secrets.
+- Phone and TV UX both matter for start/share/permissions.
+- Strings: EN first, then locale merge - [localization.md](localization.md). Prefer ASCII `-` in user-facing copy.

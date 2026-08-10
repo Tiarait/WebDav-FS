@@ -1,38 +1,29 @@
 # SSL / HTTPS
 
-WebDAV can serve **HTTP** or **HTTPS**. FTP has no SSL UI in the product path.
+WebDAV can serve **HTTP** or **HTTPS**. FTP mode has no HTTPS option in the app.
 
-A server profile only stores:
+## Per server
 
-- `useSsl` (boolean)
-- `sslCertificateId` (reference into the global certificate library)
+1. Server → **Settings** → turn on **SSL (https)**.  
+2. Open **Certificate** and pick (or create) a profile from the shared library.  
+3. **Start** or **Restart** so clients see that certificate.
 
-## Modes (`SslCertificateProfile.mode`)
+Several servers can reuse the same certificate profile.
 
-| Mode | Value | Behavior |
-|------|-------|----------|
-| Auto | `auto` | Self-signed cert generated on device (`AutoCertificateGenerator`); optional cache/export |
-| Import | `custom` | User-provided keystore (PKCS12/JKS) or PEM + private key |
-| ACME | `acme` | Let's Encrypt via `:acme` module (DNS-01 is the supported product path) |
+## Modes
 
-## UI
+| Mode | When to use |
+|------|-------------|
+| **Auto** | Quick local HTTPS (self-signed). Browsers warn until you trust/export the cert |
+| **Import** | Your own keystore (PKCS12/JKS) or PEM/CRT + private key |
+| **ACME** | Let’s Encrypt for a real domain (DNS TXT challenge) |
 
-- Toggle SSL in per-server settings (WebDAV).
-- Open certificate list / editor: `CertificateListScreen`, `SslCertificateScreen` (+ TV counterparts).
+Tap-by-tap (regenerate, export PEM, ACME, Status): [ssl-certificates-flow.md](ssl-certificates-flow.md).
 
-## Storage
+## ACME / renewal
 
-Global under app files, roughly:
+Product steps also summarized in the [user guide](../user/guide.md#lets-encrypt-outline). Renewal is **manual** — the app warns before expiry; prepare DNS again and re-issue.
 
-- `filesDir/certificates/` — metadata / store
-- `certificates_data/{id}/` — material per profile
+## If clients still see the old cert
 
-Exact layout and replication notes for implementers may also appear as `docs/SSL_CERTIFICATES.md` in the full source repository. In this tree see [ssl-certificates-flow.md](ssl-certificates-flow.md).
-
-## ACME / DNS providers
-
-Product steps: [user guide — Let’s Encrypt](../user/guide.md#lets-encrypt-outline). An example DNS-01 walkthrough may exist as `docs/ACME_DNS_NIC_UA.md` in the full source repository.
-
-## Applying certs at runtime
-
-`Server.applyProfile(profile, cert)` where `cert` comes from `SslCertificateRepository` when `sslCertificateId` is set. Engine wiring for Ktor lives under `server/ktor/` (SSL configuration helpers).
+Restart the server after changing the selected certificate. If you cannot delete a profile, another server may still be using it.

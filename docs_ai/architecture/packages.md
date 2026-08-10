@@ -1,28 +1,28 @@
-# Packages (`ua.tiar.webdavfs`)
+# Packages (high level)
 
-Root: `app/src/main/java/ua/tiar/webdavfs/`
+How the app is organized for assistants. Prefer [../user/guide.md](../user/guide.md) for “where do I tap?”.
 
-| Package / area | Role | Notable types |
-|----------------|------|----------------|
-| *(root)* | Application, FGS, boot | `App.kt`, `NotificationService.kt`, `BootReceiver.kt` |
-| `server/` | Server runtime API | `Server.kt`, `ServerConfig.kt`, `ServerManager.kt`, `ServerController.kt`, `IServer.kt` |
-| `server/fleet/` | Multi-server profiles | `ServerFleet`, `ServerProfile`, `ServerProfileStore`, `ManagedServer` |
-| `server/ktor/` | WebDAV HTTP engine | `KtorServer`, engine SSL config, routes, handlers |
-| `server/ftp/` | FTP engine | `FtpServer` |
-| `server/ssl/` | Certificate library | `SslCertificateProfile`, `Store`, `Repository`, `Resolver`, `AutoCertificateGenerator` |
-| `server/context/` | Runtime context | `ServerContext`, `AndroidServerContext`, `ServerHolder` |
-| `server/data/` | FS / user models | `FileInfo`, `UserInfo`, `FsFtpFile`, … |
-| `server/performance/` | Caching / IO helpers | `FileCache`, `StreamOptimizer`, … |
-| `ui/` | Activity + screens | `MainActivity`, `compose/*`, `tv/*`, `home/*ViewModel` |
-| `utils/` | Prefs, pro gates, net, logs | `AppSettings`, `UtilsPro`, `Logger`, `UtilsNetwork`, `UtilsPermission`, … |
-| `di/` | Koin modules | `AppModule`, `ServerModule` |
-| `env/` | Environment abstraction | `AppEnv`, `AndroidAppEnv` |
-| `core/` | Shared types | `AppResult` |
+| Area | Role |
+|------|------|
+| Fleet / profiles | Several servers, saved settings, start/stop |
+| WebDAV engine | HTTP(S) file sharing, thumbs, sync, locks, quota, … |
+| FTP engine | Optional FTP server type |
+| SSL library | Shared certificate profiles (Auto / Import / ACME) |
+| Phone UI | Server list, detail tabs, app settings, onboarding |
+| TV UI | Leanback / D-pad shell on the same fleet |
+| Announcements | Optional inbox / notices |
+| Prefs & Pro gates | Theme, language, Free/Pro limits |
+
+## Surface look (phone)
+
+| Look | Used for |
+|------|----------|
+| Card surfaces | Settings rows, Status cards, server list cards |
+| Elevated sheets | Connect (QR) and About |
 
 ## UI split
 
-- **Phone:** `ui/compose/` — e.g. `HomeScreenModern`, settings lists, dialogs.
-- **TV:** `ui/tv/` — `TVMainScreen`, panels for servers, users, logs, SSL.
-- **Shared ViewModels:** `ui/home/` — `ServerDetailViewModel`, `ServerListViewModel`, …
+- **Phone** — Compose navigation: list ↔ server ↔ app settings.
+- **TV** — separate leanback shell; same servers and settings ideas.
 
-Detection: `UiUtils.isRunningOnTv(context)` from `MainActivity`.
+Detection is automatic on Android TV devices.

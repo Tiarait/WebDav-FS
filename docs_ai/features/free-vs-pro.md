@@ -4,35 +4,40 @@
 
 | | Free | Pro |
 |---|------|-----|
-| Application id | `ua.tiar.webdavfs` | `ua.tiar.webdavfspro` |
-| Flavor module | `:free` | `:pro` |
-| Ads | Yes (AdMob + UMP) | No |
-| `IS_PRO` / `ExtendUtils.isPro()` | false | true |
+| Package | `ua.tiar.webdavfs` | `ua.tiar.webdavfspro` |
+| Ads | Yes | No |
+| Max servers | **2** | No fixed app limit |
+| Max users | **2** | No fixed app limit |
 
-Both can coexist on one device.
+Both can be installed side by side (use different ports).
 
-## Caps (code)
+## Pro-only (examples)
 
-| Limit | Free | Pro |
-|-------|------|-----|
-| Server profiles | `ServerFleet.FREE_MAX_SERVERS` (**2**) | No fixed app-code cap |
-| Users | `UtilsPro.FREE_MAX_USERS` (**2**) | No fixed free-style cap in Pro helpers |
+- **Custom HTTP headers**
+- **Hidden files** tools: pick paths to hide, and/or hide dotfiles
 
-Always re-read constants before documenting numbers in user-facing copy.
+Rows show a Pro badge / upgrade prompt on Free.
 
-## Gated features (examples)
+## Available on Free too
 
-Pro-oriented capabilities (gated via `UtilsPro` / profile apply):
+Multi-server (up to 2), SSL library, web UI, Status metrics, Logs, About / Feedback, WebDAV thumbnails / sync / locks / quota / ZIP, file metadata cache, etc.
 
-- Hidden-files configuration persistence
-- Custom HTTP headers (global/custom header lists)
+## Ads (Free only)
 
-Exact gates live in settings lists and `Server.applyProfile` — search for `UtilsPro.isPro` / `ExtendUtils`.
+### Disable ads for this session
 
-## Ads (free only)
+App settings → **Application** → **Disable ads for this session**:
 
-- Init from `MainActivity` / AdMob helpers in `:free`
-- Banners and interstitial/rewarded flows with session rules (e.g. after several server starts, cooldowns)
-- User can disable ads for the session / manage consent where implemented
+1. Confirm the dialog.  
+2. Watch a **rewarded video**.  
+3. Banners and fullscreen ads stay off **until you close the app**. Nothing is saved — next launch brings ads back.
 
-See [tv-and-ads.md](tv-and-ads.md).
+### Ad consent
+
+Same section → open the privacy / personalization form (UMP) when offered.
+
+### Interstitials
+
+Fullscreen ads may appear after several server starts (with cooldowns). Rewarded “disable for session” is the main user control.
+
+TV builds may still include Free flavor code; ad UI is mostly phone-oriented — see [tv-and-ads.md](tv-and-ads.md).

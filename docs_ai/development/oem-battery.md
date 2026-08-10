@@ -1,47 +1,22 @@
 # Battery optimization & OEM autostart
 
-Long-running LAN servers are sensitive to OEM battery savers. The app asks for exemptions from **app settings** (and related TV paths).
+Long-running LAN servers get killed by aggressive battery savers. Grant exemptions from **App settings → Permissions → Battery optimization**, and (on many phones) from the manufacturer’s own “autostart” / “background” screens.
 
 ---
 
-## Standard Android path
+## What users should do
 
-`PermissionUtils.requestBatteryOptimizationExemption`:
+1. In WebDavFS: **App settings** (gear) → **Permissions** → **Battery optimization** — allow unrestricted / ignore optimizations when asked.  
+2. If **Run with device** (boot) still fails, open the phone’s system settings for this app and enable **Autostart**, **Allow background activity**, or similar.  
+3. Brands that often need an extra step: **Xiaomi / Redmi / Poco**, **Samsung**, **Oppo / ColorOS**, **Huawei**, **Meizu**, **HTC**, **ZTE**, **Letv**. Menus change by OS version — search Settings for the brand’s “autostart” or “battery” page if the in-app deep link does nothing.  
+4. Android TV: same idea; some TVs have a separate “apps that can run in background” list.
 
-1. Prefer `ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` for this package.
-2. Fallbacks: battery optimization list / app details.
-3. Then OEM-specific screens via **`BatteryPermissionHelper`**.
+Foreground service + wake lock help, but they **do not replace** OEM allowlisting on aggressive skins.
 
-`PermissionUtils.openBatterySettings` opens manufacturer or system battery UIs (also used from server extras when enabling autostart).
-
----
-
-## Brands handled in `BatteryPermissionHelper`
-
-Based on `Build.BRAND` (lowercase):
-
-| Brand key(s) | Typical target |
-|--------------|----------------|
-| `htc` | `com.htc.pitroad` landing |
-| `huawei` | `huawei.intent.action.HSM_PROTECTED_APPS` |
-| `letv` | Letv safe background manager |
-| `meizu` | Meizu safe power UI |
-| `oppo` | ColorOS power consumption activities |
-| `samsung` | Device care / battery activities (`com.samsung.android.lool` / CN fallback) |
-| `xiaomi`, `poco`, `redmi` | MIUI powerkeeper / autostart (`HiddenAppsConfigActivity`, `AutoStartManagementActivity`, …) |
-| `zte` | HeartyService clear-app settings |
-| *else* | Generic default intents |
-
-`isBatterySaverPermissionAvailable` probes whether a brand-specific path exists before offering deep links.
-
-**Caveat:** OEM UIs change often; intents may no-op on new OS versions. Always keep a fallback to system battery settings. Document new brands in code + this page when adding them.
+Related: [../troubleshooting.md](../troubleshooting.md), [../user/guide.md](../user/guide.md#9-app-settings-gear-on-the-list).
 
 ---
 
-## Product guidance
+## Maintainer notes
 
-- Enabling **start with device** / **start with app** should nudge users toward unrestricted battery where possible.
-- TV: separate logging tag (`TvBattery`) / TV-oriented request path in `PermissionUtils`.
-- FGS + WakeLock help, but **do not replace** OEM autostart allowlisting on aggressive skins (MIUI, ColorOS, …).
-
-Related: [permissions-saf.md](permissions-saf.md), [../troubleshooting.md](../troubleshooting.md) (“Process dies in background”).
+In-app entry points call battery exemption intents, then brand-specific screens when available. Probe whether a brand path exists before offering a deep link; always keep a fallback to system battery / app details. OEM UIs change often — update this page when adding brands.

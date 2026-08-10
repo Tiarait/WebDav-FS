@@ -1,5 +1,9 @@
 # Permissions & SAF
 
+End users: storage / notifications / battery live under **App settings → Permissions**. Folder pick tips (Quick Access, SD root): [../user/guide.md](../user/guide.md#4-choosing-a-folder-quick-paths). OEM battery: [oem-battery.md](oem-battery.md).
+
+---
+
 ## Storage access (`UtilsPermission`)
 
 Path: `utils/UtilsPermission.kt`

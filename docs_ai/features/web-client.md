@@ -1,34 +1,55 @@
-# Web client (browser UI)
+# Browser file manager (web UI)
 
-## Role
+When **Web interface** is on (server Settings → Advanced), open the server URL in a browser for a file manager.
 
-When the WebDAV server enables the web interface, browsers can use a file-manager UI served from the same origin as the server.
+## Basics
 
-Sources: repo folder **`client/`** (npm).  
-Deployed into: **`app/src/main/assets/client/`**.
+- Browse, upload, download, create folders, rename/move (subject to permissions).
+- **Thumbnails** for many images/videos.
+- Optional **logs** for admins when “Show logs in web client” is on (password mode + **Admin** user).
+- **Client UI** setting: **WebDavFS client** (default), **Old Modern UI**, **Old UI**, or **No JS UI** (simple listing for very old browsers).
 
-## Build modes
+## Download a folder as ZIP
 
-Documented in detail in `client/README.md`. Summary:
+The built-in UI may not always show a big “ZIP this folder” button. Compatible ways:
 
-| Mode | Command | Result |
-|------|---------|--------|
-| Production for APK | `npm run deploy` | Bundled `app.js` + `app.css` in assets |
-| Dev modules in APK | `npm run build` (+ copy) | Split ESM modules |
-| Standalone dev | `npm run build && npm run serve` | Local `:5173`; WebDAV can be any URL |
+| Method | How |
+|--------|-----|
+| Query on the folder URL | Open/add `?zip=1` on a **folder** URL (or `accept=zip`) → download `FolderName.zip` |
+| HTTP Accept | Client sends `Accept: application/zip` on GET of a folder |
 
-## Static prefix `/~assets~/`
+Handy for grabbing a whole album in one file. Protocol note: [webdav-capabilities.md](webdav-capabilities.md#zip--archive-download).
 
-This is **not** a WebDAV collection path. Ktor serves UI static files under `/~assets~/…` from assets. WebDAV PROPFIND/GET for user files use other URLs (server root / configured paths).
+## Browse an existing ZIP
 
-Also relevant routes: `/config-js`, `/favicon.ico`.
+On a `.zip` **file**, use the item menu (**⋯**) → **Browse archive** to peek inside without extracting the whole archive to disk. Password-protected ZIPs may ask for a password. This is different from “download folder as ZIP”.
 
-## Server profile flags
+## Other useful menu actions
 
-- `useWebInterface` — enable/disable serving the UI
-- `clientUi` — e.g. `modern` / `old` / `nojs`
-- Logs may optionally surface in the web client (`logsShowInWebClient`)
+Depending on permissions and file type, **⋯** may offer: Open, **Edit** (text), Browse archive, QR, Select, Properties.  
+**Download all files** (when shown) downloads **files in the current folder only** — it is not a recursive ZIP of subfolders.
 
-## JS APIs
+Image paste into the current folder may upload a clipboard image where supported.
 
-Long-form API references may exist in the full source repository as `docs/platform-api.md` (`window.WD`) and `docs/filemanager-api.md`. Module layout in this tree: [web-client-architecture.md](web-client-architecture.md).
+## Add another WebDAV server (in the browser)
+
+In the web UI sidebar you can **Add server**: name, WebDAV URL, optional user/password, then switch between:
+
+- **This phone’s server** (the one you opened), and  
+- **Other WebDAV endpoints** (another NAS, cloud WebDAV, second phone, …).
+
+Remote URLs are fetched **through this device** (same-origin proxy) so the browser can reach them even when the other server would block cross-origin calls. Loopback / this app’s own address stays direct.
+
+This does **not** make WebDavFS a cloud account — it only lets the browser UI talk to another WebDAV URL while you are already using this phone as a hub.
+
+## Hash routes (when enabled)
+
+With password + admin + options on, the UI may open `#logs` or `#settings`-style views for admin tools. Ordinary sharing does not require these.
+
+## Office Online / WOPI
+
+Optional hooks exist for office “open in browser” flows, but the Android app does **not** ship a ready Office Online discovery URL. Prefer the built-in **text Edit/preview**. Do not expect Word/Excel Online unless you configure an external WOPI host yourself.
+
+## Turn web UI off
+
+Advanced → **Web interface** off if you only want classic WebDAV/FTP clients.

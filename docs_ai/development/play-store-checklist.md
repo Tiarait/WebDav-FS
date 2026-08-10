@@ -1,6 +1,6 @@
 # Play / store release checklist
 
-Companion to [testing-release.md](testing-release.md). For FGS subtype wording, use the checklist below; a longer Play Console draft may exist as `docs/PLAY_FGS_SPECIAL_USE.md` in the full source repository.
+Companion to [testing-release.md](testing-release.md). FGS subtype wording is included below.
 
 Use when preparing a Play Console upload (Free and/or Pro).
 
@@ -33,8 +33,6 @@ WebDavFS turns the Android device into a local WebDAV and/or FTP file server on 
 
 - `dataSync` is time-limited on recent Android versions — unsuitable for a user-started LAN server that may run for days.
 - `connectedDevice` is for BT/USB/NFC-style peripherals — not this use case.
-
-A longer draft may exist as `docs/PLAY_FGS_SPECIAL_USE.md` in the full source repository.
 
 ---
 

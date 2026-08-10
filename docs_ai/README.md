@@ -1,82 +1,68 @@
 # WebDavFS documentation
 
-Public documentation for **WebDavFS** — an Android app that turns your phone, tablet, or TV into a **WebDAV / FTP file server** on your network.
+**WebDavFS** turns an Android phone, tablet, or TV into a **WebDAV / FTP file server** on your network so other devices can browse and transfer files.
 
-This folder is meant to be published (GitHub, DeepWiki, static site, etc.). It serves:
+This folder (`docs_ai/`) is written for **DeepWiki and end users**: how the product works, where to tap in the app, and what clients can expect. It is self-contained (no links outside this tree). Prefer the running app if a screen label changes.
 
-- **End users** — how to run and configure the app  
-- **Developers & AI assistants** — architecture, internals, and contribution-oriented notes  
-
-English only. Prefer **source code** if something here drifts from the app.
+English only.
 
 ---
 
-## Publishing this folder
+## Start here
 
-You can publish **`docs_ai/` alone** (GitHub Pages, DeepWiki, a docs site). Point the index at `README.md`.
-
-- Self-contained for users: [user/guide.md](user/guide.md)  
-- Self-contained for most technical Q&A: `architecture/`, `features/`, `development/`, `troubleshooting.md`  
-- Mentions of a sibling `docs/` folder refer to **optional** deeper essays in the full source repository. They are **not** required for this tree to make sense.
-
----
-
-## For users
-
-| Doc | Contents |
-|-----|----------|
-| [user/guide.md](user/guide.md) | Full how-to: quick start, every setting, connect, troubleshooting |
-| [overview.md](overview.md) | Short product overview (Free vs Pro, protocols) |
-| [troubleshooting.md](troubleshooting.md) | Common failures (user + technical) |
-
-Start here if you just installed the app: **[User guide](user/guide.md)**.
+| You want… | Open |
+|-----------|------|
+| Setup and every setting explained | [user/guide.md](user/guide.md) |
+| Short product picture | [overview.md](overview.md) |
+| Metrics, logs, picker, notices | [features/app-ux.md](features/app-ux.md) |
+| WebDAV extras (thumbs, sync, quota, ZIP, …) | [features/webdav-capabilities.md](features/webdav-capabilities.md) |
+| Browser file manager / ZIP / Add server | [features/web-client.md](features/web-client.md) |
+| HTTPS certificates (tap path) | [features/ssl-certificates-flow.md](features/ssl-certificates-flow.md) |
+| FTP mode | [features/ftp.md](features/ftp.md) |
+| Address, Wi‑Fi, buffer | [features/networking.md](features/networking.md) |
+| Users / roles | [features/auth-users.md](features/auth-users.md) |
+| Android TV | [features/tv-ui-map.md](features/tv-ui-map.md) |
+| Free vs Pro / ads | [features/free-vs-pro.md](features/free-vs-pro.md) |
+| Something went wrong | [troubleshooting.md](troubleshooting.md) |
 
 ---
 
-## For developers & AI assistants
+## In the app (phone)
 
-| Section | Contents |
-|---------|----------|
-| [architecture/](architecture/) | Modules, packages, lifecycle, diagrams |
-| [features/](features/) | Settings catalog, networking, auth, SSL, WebDAV/FTP, TV, web client |
-| [build/](build/) | Flavors, SDK, signing, locales |
-| [development/](development/) | Entry points, DI, permissions, Play checklist |
-| [reference/](reference/) | Optional deeper files in the full source repo |
+1. **Server list** — cards for each server; **+** to add; **gear** for app-wide settings.  
+2. Open a server → tabs: **Home**, **Settings**, **Status** (metrics), **Logs**.  
+3. **App settings** (gear) — theme, language, permissions, About, Feedback, Help, Ask AI.  
+4. **Bell** on the list — in-app notifications inbox.  
+5. Folder pickers offer **Quick Access** shortcuts (Downloads, Gallery, SD, …).  
+6. First launch may show **onboarding**.
 
-Hard facts (from application code):
-
-| Fact | Value |
-|------|--------|
-| Free max servers | 2 (`ServerFleet.FREE_MAX_SERVERS`) |
-| Free max users | 2 (`UtilsPro.FREE_MAX_USERS`) |
-| Free package | `ua.tiar.webdavfs` |
-| Pro package | `ua.tiar.webdavfspro` |
-| `targetSdk` / `compileSdk` | 36 |
-| Foreground service type | `specialUse` (not `dataSync`) |
-
----
-
-## Repository layout
-
-```
-WebDavFS/
-  app/       Android application
-  free/      Free flavor (ads)
-  pro/       Pro flavor
-  acme/      Let's Encrypt helpers
-  client/    Browser file-manager UI (npm)
-  docs/      Additional long-form notes (SSL design, Play FGS text, JS APIs)
-  docs_ai/   This documentation tree (publishable)
-  scripts/   Locale merge helpers
-```
+On **Android TV**, use the leanback shell (servers / settings / about) with the same features — see [features/tv-ui-map.md](features/tv-ui-map.md).
 
 ---
 
 ## Editions
 
-| Edition | Application id | Notes |
-|---------|----------------|--------|
-| Free | `ua.tiar.webdavfs` | Ads; limited servers/users; some Pro-only options |
-| Pro | `ua.tiar.webdavfspro` | No ads; Pro features unlocked |
+| | Free | Pro |
+|---|------|-----|
+| Package | `ua.tiar.webdavfs` | `ua.tiar.webdavfspro` |
+| Ads | Yes | No |
+| Max servers | **2** | No fixed app limit |
+| Max users | **2** | No fixed app limit |
+| Custom headers / hidden-file tools | Limited | Unlocked |
 
-Both can be installed side by side (use different ports if both run servers).
+Install both side by side if needed; use **different ports** when both servers run.
+
+---
+
+## Doc map
+
+| Section | Contents |
+|---------|----------|
+| [user/](user/) | How-to guide |
+| [overview.md](overview.md) | Product summary |
+| [features/](features/) | Capabilities, settings catalog, SSL, FTP, TV, browser UI |
+| [troubleshooting.md](troubleshooting.md) | Common failures |
+| [architecture/](architecture/) | High-level how pieces fit (for assistants) |
+| [development/](development/) | Build/release notes for maintainers |
+| [build/](build/) | Flavors / SDK |
+| [reference/](reference/) | Index of pages in this tree |

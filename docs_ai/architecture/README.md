@@ -1,31 +1,32 @@
 # Architecture
 
+High-level picture for DeepWiki. For setup questions, use [../user/guide.md](../user/guide.md) and [../features/webdav-capabilities.md](../features/webdav-capabilities.md).
+
 ## Index
 
 | Doc | Topic |
 |-----|--------|
-| [modules.md](modules.md) | Gradle modules and `client/` |
-| [packages.md](packages.md) | Java/Kotlin packages under `app` |
-| [runtime-lifecycle.md](runtime-lifecycle.md) | Start/stop, FGS `specialUse`, WakeLock |
-| [diagrams.md](diagrams.md) | Mermaid: start/stop, Wi‑Fi, ACME |
+| [modules.md](modules.md) | App flavors and related projects |
+| [packages.md](packages.md) | Major areas of the app |
+| [runtime-lifecycle.md](runtime-lifecycle.md) | Start/stop, foreground service, wake lock |
+| [diagrams.md](diagrams.md) | Mermaid overviews |
 
 ## Mental model
 
 ```
-UI (Compose / TV)
-    │  start / stop / edit profile
+UI (phone or TV)
+    │  start / stop / edit settings
     ▼
-ServerFleet  ──► ServerProfileStore (JSON on disk)
+Server fleet (several profiles)
     │
     ▼
-Server (per profile runtime)
-    ├── KtorServer   (WebDAV)
-    └── FtpServer    (FTP)
+Per-server runtime
+    ├── WebDAV (HTTP/HTTPS)
+    └── FTP (optional type)
     │
     ▼
-NotificationService (foreground) + ServerManager WakeLock
+Foreground notification + keep-awake while any server is active
 ```
 
-**SSL** is a separate library of certificate profiles (`SslCertificateRepository`). A server profile only stores `useSsl` + `sslCertificateId`.
-
-**AppSettings** holds app-wide prefs (theme, language, legacy migration, ad counters), not the full per-server config (that lives in fleet profiles).
+**SSL certificates** live in a shared library; each server only selects one profile.  
+**App settings** (theme, language, permissions, About) are global; per-server options live on each server’s Settings tab.

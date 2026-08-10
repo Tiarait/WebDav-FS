@@ -1,81 +1,49 @@
-# TV UI map
+# Android TV (users)
 
-Entry: `MainActivity` → `UiUtils.isRunningOnTv` → **`TVMainScreen`**.
+Phone layout: [../user/guide.md](../user/guide.md). This page is what differs on TV.
 
-Navigation types: `ui/tv/TvNavigation.kt`, sub-screens: `TvServerSubScreen.kt`.
+## Navigation
 
----
+Leanback-style shell (D-pad / remote):
 
-## Shell
+| Area | Role |
+|------|------|
+| **Servers** | List, add, open a server, start/stop, QR |
+| **Settings** | App-wide options (theme, language, permissions, …) |
+| **About** | App info |
+| **Exit** | Leave the app |
 
-| Piece | File | Role |
-|-------|------|------|
-| Root | `TVMainScreen.kt` | Hosts panels, permissions, QR, sub-screen state |
-| Layout | `SlidingPanelContainer.kt` | Sidebar + content; focus levels |
-| Nav rail | `NavigationPanel.kt` | Servers / Settings / About / Exit |
-| Header | `TVHeader.kt` | Branding / actions |
-| Theme | `TVTheme.kt`, `TvPalette`, `TvTypography`, `TvDimens`, `TvFocus` | Look & D-pad focus |
+Open a server for its settings, users, logs, and certificates as focused panels/overlays.
 
----
+## Same as phone
 
-## Navigation items & levels
+- Multi-server fleet, ports, folders/users, SSL library, autostart, logging  
+- Free caps (2 servers / 2 users)  
+- Connect / QR to get the address onto another device  
 
-**Items** (`NavigationItem`): `Servers`, `Settings`, `About`, `Exit`.
+## Different from phone
 
-**Levels** (`NavigationLevel`):
+| Phone | TV |
+|-------|-----|
+| Tabs Home / Settings / Status / Logs | Panels and overlays; **no Status metrics tab** like on phone |
+| Bell inbox for notices | Mostly **blocking** announcement dialogs when needed |
+| Touch cards + FAB | D-pad focus; long-press / Menu for rename/delete |
+| Ads / rewarded flows | Free flavor may exist; ad UX is phone-oriented |
 
-| Level | Meaning |
-|-------|---------|
-| `Main` | Sidebar expanded |
-| `Content` | Sidebar collapsed; focus in content |
-| `Detail` | Server settings expanded; sidebar still visible |
-| `SubScreen` | Full overlay (users / logs / certificates); sidebar hidden |
+## Tips
 
-Focus helpers live on `TvNavActions` (enter/exit detail/sub-screen, pending focus flags).
+- Grant storage (and notifications if you want the ongoing notification) the same as on phone.  
+- Prefer a wired/Ethernet or stable Wi‑Fi TV for a LAN server.  
+- Battery / “don’t kill background apps” still matters on some TV OEMs.
 
----
-
-## Content by nav item
-
-```
-TVMainScreen
-├── Servers → ServersPanel
-│     ├── list / select / start-stop / QR / add (TvAddServerPanel)
-│     ├── detail → TvServerSettingsPanel
-│     └── SubScreen
-│           ├── Users → TvUsersPanel (+ TvUserEditScreen / TvUserPaneContent)
-│           ├── Logs → TvLogsPanel (+ TvLogsPaneContent)
-│           └── Certificates → TvCertificatesPanel
-│                 └── edit → TvSslCertificatePaneContent
-├── Settings → SettingsPanel / TvAppSettings
-├── About → AboutPanel
-└── Exit → rememberAppExit / exit flow
-```
-
-Shared chrome: `TvCards`, `TvSurfaces`, `TvBadges`, `TvOverlayShell`, `TvIcons`, `TvCollapse`.
+Developer focus map (screens): keep reading below only if you maintain TV UI.
 
 ---
 
-## Sub-screens (`TvServerSubScreen`)
+## Screen map (maintainers)
 
-| Variant | Panel |
-|---------|--------|
-| `None` | — |
-| `Users(serverId)` | `TvUsersPanel` |
-| `Logs(serverId)` | `TvLogsPanel` |
-| `Certificates(serverId)` | `TvCertificatesPanel` |
+Entry: TV main shell → Servers / Settings / About / Exit.
 
-Opened from server settings actions; back uses `exitSubScreen` / `onExitToSettings`.
+Servers → list + detail settings; overlays for Users, Logs, Certificates.
 
----
-
-## Parity with phone
-
-| Concern | TV note |
-|---------|---------|
-| Start/stop | Same fleet + permission gates; soft notification reminder |
-| SAF | `SdCardRequestHandler` passed into panels |
-| Free limits | Toasts via `server_limit_free` / user limit dialogs |
-| Ads | Generally phone-oriented; TV free builds still use `:free` module where wired |
-
-When changing a phone-only UX (share address, notification dialog), check whether TV needs an equivalent path.
+Parity checklist when changing phone-only UX: share address, notification reminder, SAF folder pick.

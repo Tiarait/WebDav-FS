@@ -1,35 +1,31 @@
-# Multi-server (fleet)
+# Multi-server
 
-## Concepts
+You can run **several independent servers** on one device (for example internal storage on `:8080` and an SD card folder on `:8081`).
 
-| Type | Role |
-|------|------|
-| `ServerProfile` | Persistent JSON config (port, folder, SSL id, users flags, autostart, …) |
-| `ServerProfileStore` | Load/save profiles on disk |
-| `ManagedServer` | Profile + optional live `Server` runtime |
-| `ServerFleet` | In-memory list; start/stop/patch/save; free-tier limits |
+## Rules users care about
 
-Legacy single-server prefs in `AppSettings` migrate once into the default profile on first fleet load.
+- Each server needs its **own TCP port**.
+- **Free:** up to **2** servers. **Pro:** no fixed app limit.
+- Each server has its own folder (or users), SSL choice, web UI, CORS, cache, and autostart flags.
+- Stopping one server does not stop the others; the notification can stop a single server or all.
 
-## Rules
+## Where to go in the app
 
-- **Port uniqueness:** two profiles must not share a bind port; start fails if the port is taken.
-- **Free cap:** `ServerFleet.FREE_MAX_SERVERS` (**2**). Pro: no fixed cap in app code.
-- **Protocols:** per profile `serverType` = `webdav` | `ftp`; `useSsl` applies to WebDAV only.
+| Goal | Where |
+|------|--------|
+| See all servers | Server list (open the app) |
+| Start / stop / address / QR | Open server → **Home** |
+| Change that server | **Settings** tab |
+| Live mode chips & device stats | **Status** tab — [app-ux.md](app-ux.md) |
+| Session logs | **Logs** tab — [app-ux.md](app-ux.md) |
+| Folder Quick Access | Folder picker shortcuts — [../user/guide.md](../user/guide.md#4-choosing-a-folder-quick-paths) |
+| In-app notices | Bell on server list |
+| Theme, language, About, reset everything | Gear on the **server list** |
 
-## Status
+TV uses a two-pane / D-pad layout with the same ideas — [tv-ui-map.md](tv-ui-map.md).
 
-Each runtime exposes `statusFlow` (`Stopped` → `Starting` → `Started`, etc.). The notification and WakeLock track whether **any** server is active (`anyActive()`).
+## Related
 
-## Data on disk (typical)
-
-- Profile store (fleet JSON) — see `ServerProfileStore` implementation for exact path.
-- Per-server data under app files (e.g. users JSON under `servers_data/{id}/`).
-- Certificates under the global SSL store (`filesDir/certificates/…`) — not embedded in each profile beyond `sslCertificateId`.
-
-## UI
-
-- Phone: server list + detail (`HomeScreen` / `HomeScreenModern`) + sheet settings.
-- TV: `ServersPanel` + detail ViewModels keyed by server id.
-
-Deeper field reference for developers: [settings-catalog.md](settings-catalog.md). End-user explanations: [../user/guide.md](../user/guide.md).
+- Settings explained: [../user/guide.md](../user/guide.md)
+- Field catalog: [settings-catalog.md](settings-catalog.md)
+- Caps: [free-vs-pro.md](free-vs-pro.md)

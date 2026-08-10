@@ -1,100 +1,99 @@
 # Troubleshooting
 
-Quick symptoms → likely causes. End users can start with [user/guide.md § Common problems](user/guide.md#7-common-problems).  
-Prefer in-app **Logs** (when logging is enabled) when debugging further.
+Symptoms → what to try. Start with [user/guide.md](user/guide.md). Use in-app **Logs** when logging is enabled.
 
 ---
 
 ## Notifications
 
-| Symptom | Likely cause | What to check |
-|---------|--------------|---------------|
-| No persistent notification while server runs | `POST_NOTIFICATIONS` denied (API 33+) | Soft reminder / system app notification settings |
-| FGS crashes / Play rejection | Wrong FGS type | Must be `specialUse` + subtype property — see Play checklist |
-| Notification actions do nothing | PendingIntent / package mismatch | Free vs Pro are different `applicationId`s |
+| Symptom | Try |
+|---------|-----|
+| No ongoing “server running” entry | Allow notification permission (Android 13+); App settings → Permissions |
+| Bell inbox empty | Pull refresh in the inbox; not the same as the system notification |
+| Stop in notification does nothing | Confirm Free vs Pro package; reopen the app and stop from Home |
 
 ---
 
 ## Server will not start
 
-| Message / symptom | Cause |
-|-------------------|--------|
-| `Port {n} is already in use` | Another process (or another profile) bound the port |
-| `Port {n} is not available` | Probe failed after retries |
-| `Access denied for port {n}` | `AccessControlException` / restricted bind |
-| `Root folder … is not exist.` | Missing root on internal storage (SD missing may still attempt start) |
-| `Cant generate ip address` | Empty host after retries |
-| `FTP Server Configuration Error: …` | Apache FtpServer config failure |
-| Toast: already running on port | Same app already serving; treated as Started |
-| Start opens permission UI | `UtilsPermission.hasPermissions` false |
-
-Also: free tier cannot add endless servers (`FREE_MAX_SERVERS = 2`).
+| Symptom | Try |
+|---------|-----|
+| Port already in use | Pick another port; stop the other server/app using it |
+| Root folder missing | Re-pick Folder (Quick Access / Browse); SD may need SAF again |
+| Permission UI on start | Grant storage; for SD complete the system folder access dialog |
+| Cannot add another server | Free max **2** servers |
 
 ---
 
 ## Wrong / unreachable address
 
-| Symptom | Check |
-|---------|--------|
-| Shows `127.0.0.1` | No usable LAN IPv4; Wi‑Fi off / AP-only quirks |
-| Client on PC cannot connect | Same LAN? Client VPN? `ipType` bound to wrong interface? Firewall on phone OEM? |
-| Address stale after Wi‑Fi change | `WifiReceiver` should refresh + restart; verify receiver registered and logs |
-| HTTPS trust errors on PC | Auto/self-signed cert — expect browser warning; import/ACME for real CA |
+| Symptom | Try |
+|---------|-----|
+| Shows localhost only | Turn on Wi‑Fi / Ethernet; avoid bad VPN |
+| PC cannot connect | Same LAN? Correct port and http/https? OEM firewall? |
+| Address wrong after Wi‑Fi change | Wait for refresh or restart the server; check Home address |
+| HTTPS warnings | Normal for Auto/self-signed; use ACME or trust/export the cert |
 
 ---
 
-## Links / share
+## Folder picker / SD
 
-| Symptom | Cause |
-|---------|--------|
-| “No application found” opening http(s) | Android 11+ package visibility — app uses `<queries>` + share sheet; DialogLink should `startActivity` without relying on `resolveActivity` alone |
-| Share sheet missing targets | Rare OEM; copy from share targets or clipboard |
+| Symptom | Try |
+|---------|-----|
+| Shortcuts missing | Grant storage first |
+| Cannot write on SD | Re-open the system picker, go to the **SD card root**, tap **Select** / Use this folder, accept access, then restart the server |
+| “No app can do this” | Use all-files access or another picker path from Quick Access |
+
+---
+
+## Logs
+
+| Symptom | Try |
+|---------|-----|
+| Empty Logs tab | Enable logging in Settings; open **Current session** |
+| Too much noise | Filter by status/method; search; pause live |
+| Need to send for help | Export / share from the Logs menu |
 
 ---
 
 ## Users / auth
 
-| Symptom | Check |
-|---------|--------|
-| Cannot add user | Free cap `FREE_MAX_USERS = 2` |
-| 401 from WebDAV | `useUsers` on; credentials vs `servers_data/{id}/users` |
-| Anonymous unexpectedly | `useUsers == false` |
+| Symptom | Try |
+|---------|-----|
+| Cannot add user | Free max **2** users |
+| 401 from clients | Password mode on; check login/password |
+| Unexpected anonymous access | Turn **Use password** on |
 
 ---
 
-## SD card / write
+## Ads (Free)
 
-| Symptom | Check |
-|---------|--------|
-| Cannot write external SD | SAF tree grant missing — re-pick folder via `SdCardRequestHandler` |
-| “No app can do this” | No `OPEN_DOCUMENT_TREE` handler / all-files fallback |
-| Folder reset dialog | Root path invalid — `root_folder_not_exist_reset_dialog` flow |
-
----
-
-## Ads (free)
-
-| Symptom | Check |
-|---------|--------|
-| Interstitial never shows | `countServerStart` threshold, cooldown, `areAdsEnabled`, UI visible; status observer must watch **all** fleet servers |
-| Ads on Pro | Should not — wrong flavor / dependency |
+| Symptom | Try |
+|---------|-----|
+| Ads still show after reward | Session-only disable - restarting the app brings ads back |
+| Consent / personalized ads | App settings → Application → consent |
 
 ---
 
-## Process dies in background
+## SSL
 
-| Check |
-|-------|
-| Battery optimization / OEM autostart |
-| WakeLock released while servers still active (bug — `anyActive()`) |
-| User swiped away with stop-on-remove OEM behavior |
-| `dataSync` FGS timeout — must not use `dataSync` for this product |
+| Symptom | Try |
+|---------|-----|
+| Clients reject cert | Auto is self-signed; import PEM or use ACME |
+| ACME fails | DNS TXT must match; wait for propagation; retry verify |
 
----
+## Dies when screen is off / after reboot
 
-## Related docs
+| Symptom | Try |
+|---------|-----|
+| Server stops in background | App settings → Battery optimization; allow unrestricted |
+| Boot start does nothing | Enable **Run with device**; also OEM autostart (Xiaomi, Samsung, Oppo, …) — [development/oem-battery.md](development/oem-battery.md) |
 
-- [architecture/runtime-lifecycle.md](architecture/runtime-lifecycle.md)
-- [features/networking.md](features/networking.md)
-- [development/permissions-saf.md](development/permissions-saf.md)
-- [user/guide.md](user/guide.md) (end-user LAN vs internet)
+## FTP
+
+| Symptom | Try |
+|---------|-----|
+| No web UI / HTTPS options | Expected in FTP mode — switch **Server type** back to WebDAV if you need them |
+| Client cannot connect | Same LAN; `ftp://IP:port`; prefer password mode — [features/ftp.md](features/ftp.md) |
+
+Related: [features/ssl.md](features/ssl.md), [features/app-ux.md](features/app-ux.md), [features/networking.md](features/networking.md).

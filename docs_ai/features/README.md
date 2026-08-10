@@ -4,30 +4,38 @@
 
 | Doc | Topic |
 |-----|--------|
-| [multi-server.md](multi-server.md) | Profiles, ports, storage |
-| [settings-catalog.md](settings-catalog.md) | UI → `ServerProfile` / `AppSettings` fields |
-| [networking.md](networking.md) | Address, bind host, Wi‑Fi restart |
-| [auth-users.md](auth-users.md) | Password mode, users file, free cap |
-| [ssl.md](ssl.md) | Auto / Import / ACME overview |
-| [ssl-certificates-flow.md](ssl-certificates-flow.md) | Cert UI → repository → Ktor apply |
-| [free-vs-pro.md](free-vs-pro.md) | Caps and gated features |
-| [web-client.md](web-client.md) | Bundled browser UI (deploy / routes) |
-| [web-client-architecture.md](web-client-architecture.md) | JS platform + filemanager layout |
-| [webdav-ktor.md](webdav-ktor.md) | Ktor/WebDAV routes & behavior |
-| [webdav-errors.md](webdav-errors.md) | Error# codes → HTTP statuses |
-| [ftp.md](ftp.md) | FTP bind, users, permissions |
-| [tv-and-ads.md](tv-and-ads.md) | Leanback ads notes |
-| [tv-ui-map.md](tv-ui-map.md) | TV navigation & screen map |
+| [webdav-capabilities.md](webdav-capabilities.md) | Thumbs, RFCs, sync, quota, locks, ZIP, CORS |
+| [app-ux.md](app-ux.md) | Status metrics, folder picker, logs, notifications |
+| [webdav-ktor.md](webdav-ktor.md) | Short WebDAV behavior map |
+| [webdav-errors.md](webdav-errors.md) | HTTP statuses clients see |
+| [multi-server.md](multi-server.md) | Several servers, ports, UI |
+| [settings-catalog.md](settings-catalog.md) | Settings → what they control |
+| [networking.md](networking.md) | Address, Wi‑Fi, bind |
+| [auth-users.md](auth-users.md) | Password mode and users |
+| [ssl.md](ssl.md) | HTTPS certificates |
+| [ssl-certificates-flow.md](ssl-certificates-flow.md) | Cert library flow |
+| [free-vs-pro.md](free-vs-pro.md) | Caps and Pro options |
+| [web-client.md](web-client.md) | Built-in browser file manager |
+| [web-client-architecture.md](web-client-architecture.md) | Browser UI modules (maintainers) |
+| [ftp.md](ftp.md) | FTP mode |
+| [tv-and-ads.md](tv-and-ads.md) | TV / ads notes |
+| [tv-ui-map.md](tv-ui-map.md) | TV screens |
 
-## Feature map (quick)
+## Quick answers for DeepWiki
 
-| Feature | Where to look |
-|---------|----------------|
-| Server list / start-stop | `ServerListScreen`, `HomeScreenModern`, TV `ServersPanel` |
-| Per-server settings | `settingsListServerOrdered`, [settings-catalog.md](settings-catalog.md) |
-| Users | `UsersManagementScreen`, `TvUsersPanel`, [auth-users.md](auth-users.md) |
-| QR / share address | `DialogQr`, `shareText`, [networking.md](networking.md) |
-| Logs | `LogsScreen`, `Logger`, profile `logsEnabled` |
-| Certificates | `CertificateListScreen`, `SslCertificateScreen` |
-| Autostart | Profile `startWithApp` / `startWithDevice`; `BootReceiver` |
-| Web interface flags | Profile `useWebInterface`, `clientUi` (`modern` / `old` / `nojs`) |
+| Question | Where |
+|----------|--------|
+| How do I start / connect? | [../user/guide.md](../user/guide.md) |
+| Status metrics / logs / folder shortcuts? | [app-ux.md](app-ux.md) · [../user/guide.md](../user/guide.md) |
+| Does it support thumbnails? | [webdav-capabilities.md](webdav-capabilities.md#thumbnails--image--video-previews) |
+| Quota / sync / locks / ZIP? | [webdav-capabilities.md](webdav-capabilities.md) |
+| Browser UI / ZIP download / Add server in client? | [web-client.md](web-client.md) |
+| Where is CORS / cache / Client UI / hidden files? | Server → Settings → Advanced; [../user/guide.md](../user/guide.md) |
+| Free limits / disable ads? | [free-vs-pro.md](free-vs-pro.md) |
+| HTTPS / export / ACME? | [ssl.md](ssl.md) · [ssl-certificates-flow.md](ssl-certificates-flow.md) |
+| FTP? | [ftp.md](ftp.md) |
+| Wi‑Fi / bind / buffer? | [networking.md](networking.md) |
+| Users / Admin / Guest? | [auth-users.md](auth-users.md) |
+| Android TV differences? | [tv-ui-map.md](tv-ui-map.md) |
+| SD write fails? | [../troubleshooting.md](../troubleshooting.md) (pick SD root) |
+| Dies in background? | [../development/oem-battery.md](../development/oem-battery.md) |
