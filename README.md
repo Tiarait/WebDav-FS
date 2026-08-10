@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
 
-[![Issues][issues-shield]][issues-url] [![Android][android-shield]][gp-url] [![LinkedIn][linkedin-shield]][linkedin-url] [![Coffee][coffee-shield]][coffee-url]
+[![Issues][issues-shield]][issues-url] ![Version][version-shield] [![Android][android-shield]][gp-url] [![LinkedIn][linkedin-shield]][linkedin-url] [![DeepWiki][deepwiki-shield]][deepwiki-url]
 
 
 # [WebDAV FS - Android App](https://tiarait.github.io/WebDav-FS-Intro/)
@@ -23,8 +23,6 @@ There is support for HTTPS, a built-in browser file manager, Android TV, and Fre
 </p>
 
 <br></br>
-
-### User help [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Tiarait/WebDav-FS)
 
 ## About
 
@@ -56,11 +54,15 @@ The Android app lets you:
 - Ask questions on [DeepWiki](https://deepwiki.com/Tiarait/WebDav-FS)
 
 ## Screenshots
-[<img src="/screenshots/screen_1.png" align="left" width="20%" hspace="10" vspace="10">]()
-[<img src="/screenshots/screen_2.png" align="center" width="20%" hspace="10" vspace="10">]()
-    
-[<img src="/screenshots/screen_tv_1.png" align="center" width="40%" hspace="10" vspace="10">]()
-[<img src="/screenshots/screen_tv_2.png" align="center" width="40%" hspace="10" vspace="10">]()
+
+![WebDAV Client](./screenshots/logo_large.jpg)
+
+| | |
+| --- | --- |
+| ![0 · Mobile server list](./screenshots/0.png) | ![1 · Mobile serser](./screenshots/1.png) |
+| ![2 · Mobile server status](./screenshots/2.png) | ![3 · TV main](./screenshots/3.png) |
+| ![4 · TV server](./screenshots/4.png) | |
+
 
 ## License
 
@@ -70,10 +72,10 @@ WebDAV FS is released under the [Apache-2.0](LICENSE).
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [issues-shield]: https://img.shields.io/github/issues/Tiarait/WebDav-FS.svg?style=for-the-badge
 [issues-url]: https://github.com/Tiarait/WebDav-FS/issues
-[version-shield]: https://img.shields.io/badge/Version-1.0.25-blue?style=for-the-badge
+[version-shield]: https://img.shields.io/badge/Version-1.3.0-blue?style=for-the-badge
 [gp-url]: https://play.google.com/store/apps/details?id=ua.tiar.webdavfs
 
-[coffee-shield]: https://img.shields.io/badge/-Bye_me_a_coffee-red.svg?style=for-the-badge&logo=buymeacoffee&colorB=grey
-[coffee-url]: https://www.buymeacoffee.com/tiarapps
-
 [android-shield]: https://img.shields.io/badge/Android-5.0+-green?style=for-the-badge
+
+[deepwiki-url]: https://deepwiki.com/Tiarait/WebDav-FS
+[deepwiki-shield]: https://img.shields.io/badge/ASK-DeepWiki-blue?style=for-the-badge
